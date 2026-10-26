@@ -1,0 +1,26 @@
+# Gradle
+.gradle/
+build/
+/captures
+
+# Android Studio / IntelliJ
+*.iml
+.idea/
+.kotlin/
+
+# Локальные настройки (путь к SDK и т.п.)
+local.properties
+
+# Сборки и ключи
+*.apk
+*.aab
+*.jks
+*.keystore
+
+# Нативные сборки
+.externalNativeBuild
+.cxx
+
+# Системный мусор
+.DS_Store
+Thumbs.db

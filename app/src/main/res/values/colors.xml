@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="suit_red">#D32F2F</color>
+    <color name="suit_black">#1C1B1F</color>
+    <color name="card_face">#FFFFFF</color>
+    <color name="card_border">#33000000</color>
+</resources>
