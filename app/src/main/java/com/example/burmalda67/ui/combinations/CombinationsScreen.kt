@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,27 +23,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.burmalda67.R
 import com.example.burmalda67.data.HandCombination
 import com.example.burmalda67.data.HandCombinations
 import com.example.burmalda67.ui.theme.Burmalda67Theme
@@ -53,33 +47,22 @@ import com.example.burmalda67.ui.theme.CardFace
 import com.example.burmalda67.ui.theme.SuitBlack
 import com.example.burmalda67.ui.theme.SuitRed
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CombinationsScreen(modifier: Modifier = Modifier) {
     // ранги раскрытых элементов; по клику раскрывается описание
     var expanded by rememberSaveable { mutableStateOf(emptySet<Int>()) }
 
-    Scaffold(
-        modifier = modifier,
-        contentWindowInsets = WindowInsets(0),
-        topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.combinations_title)) })
-        },
-    ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentPadding = PaddingValues(vertical = 8.dp),
-        ) {
-            items(HandCombinations.all, key = { it.rank }) { item ->
-                val isExpanded = item.rank in expanded
-                CombinationItem(
-                    item = item,
-                    expanded = isExpanded,
-                    onClick = { expanded = if (isExpanded) expanded - item.rank else expanded + item.rank },
-                )
-            }
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(vertical = 8.dp),
+    ) {
+        items(HandCombinations.all, key = { it.rank }) { item ->
+            val isExpanded = item.rank in expanded
+            CombinationItem(
+                item = item,
+                expanded = isExpanded,
+                onClick = { expanded = if (isExpanded) expanded - item.rank else expanded + item.rank },
+            )
         }
     }
 }
