@@ -11,17 +11,15 @@
     <string name="join_title">Войти в комнату</string>
     <string name="join_code_label">Код комнаты</string>
     <string name="join_code_error">Введи код комнаты</string>
-    <string name="join_explicit">Войти</string>
-    <string name="join_implicit">По ссылке</string>
+    <string name="join_button">Войти</string>
 
-    <string name="holdem_description">Быстрая игра, блайнды 10/20</string>
+    <string name="holdem_description">Быстрая игра: посадим за случайный стол со свободными местами</string>
     <string name="play">Играть</string>
     <string name="section_tables">Открытые столы</string>
     <string name="blinds">Блайнды %1$s</string>
     <string name="seats">%1$d/%2$d</string>
 
     <string name="combinations_title">Комбинации</string>
-    <string name="combination_probability">%1$s</string>
 
     <string name="profile_stub_title">Профиль скоро будет</string>
     <string name="profile_stub_text">Здесь появятся статистика и история игр</string>
@@ -29,4 +27,10 @@
     <string name="room_title">Комната</string>
     <string name="room_back">Назад</string>
     <string name="room_waiting">Ожидание игроков…</string>
+    <string name="room_blinds">Блайнды %1$s</string>
+    <string name="room_seats">Игроков: %1$d/%2$d</string>
+    <string name="room_code">Код: %1$s</string>
+    <string name="room_not_found_title">Комната не найдена</string>
+    <string name="room_not_found_text">Комнаты с кодом %1$s нет. Проверь код или выбери стол в лобби.</string>
+    <string name="room_to_lobby">В лобби</string>
 </resources>

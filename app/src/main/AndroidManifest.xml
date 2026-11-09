@@ -15,6 +15,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.Burmalda67"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -22,13 +23,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
 
-        <!-- Комната: открывается явным Intent или неявным по ссылке burmalda://room/<код> -->
-        <activity
-            android:name=".RoomActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Burmalda67">
+            <!-- ссылка burmalda://room/<код> открывает фрагмент комнаты -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -40,6 +36,7 @@
                     android:scheme="burmalda" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

@@ -21,4 +21,9 @@ object MockData {
         PokerTable("ENDOVA", "Фанаты стихов Ендовицкого", "100/200", 8, 9),
         PokerTable("CHEREMSHA", "Тихо не спеша черемша", "5/10", 1, 6),
     )
+
+    fun findTable(code: String): PokerTable? = tables.find { it.code.equals(code, ignoreCase = true) }
+
+    // быстрая игра: случайный стол, где есть свободные места
+    fun quickGameTable(): PokerTable? = tables.filter { it.seatsTaken < it.seatsTotal }.randomOrNull()
 }

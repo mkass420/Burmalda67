@@ -1,11 +1,8 @@
 package com.example.burmalda67.ui.lobby
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +19,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +28,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,23 +35,18 @@ import androidx.compose.ui.unit.dp
 import com.example.burmalda67.R
 import com.example.burmalda67.data.MockData
 import com.example.burmalda67.data.PokerTable
-import com.example.burmalda67.RoomActivity
 import com.example.burmalda67.ui.theme.Burmalda67Theme
 
 @Composable
-fun LobbyScreen(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
+fun LobbyScreen(onOpenRoom: (String) -> Unit, modifier: Modifier = Modifier) {
     val player = MockData.player
 
-    BoxWithConstraints(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .safeDrawingPadding(),
         contentAlignment = Alignment.TopCenter,
     ) {
-        // на узких экранах кнопки ставим друг под другом
-        val narrow = maxWidth < 360.dp
-
         Column(
             modifier = Modifier
                 .widthIn(max = 600.dp)
@@ -77,11 +67,7 @@ fun LobbyScreen(modifier: Modifier = Modifier) {
                 )
             }
 
-            JoinRoomCard(
-                narrow = narrow,
-                onExplicit = { code -> openRoom(context, code) },
-                onImplicit = { code -> openRoomByLink(context, code) },
-            )
+            JoinRoomCard(onJoin = onOpenRoom)
 
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp)) {
@@ -89,7 +75,7 @@ fun LobbyScreen(modifier: Modifier = Modifier) {
                     Text(stringResource(R.string.holdem_description), style = MaterialTheme.typography.bodyMedium)
                     Spacer(Modifier.height(12.dp))
                     Button(
-                        onClick = { openRoom(context, "HOLD01") },
+                        onClick = { MockData.quickGameTable()?.let { onOpenRoom(it.code) } },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text(stringResource(R.string.play))
@@ -101,37 +87,22 @@ fun LobbyScreen(modifier: Modifier = Modifier) {
             Card(modifier = Modifier.fillMaxWidth()) {
                 MockData.tables.forEachIndexed { index, table ->
                     if (index > 0) HorizontalDivider()
-                    TableRow(table) { openRoom(context, table.code) }
+                    TableRow(table) { onOpenRoom(table.code) }
                 }
             }
         }
     }
 }
 
-// явный интент: сразу указываем, какую активность открыть
-private fun openRoom(context: Context, code: String) {
-    val intent = Intent(context, RoomActivity::class.java)
-    intent.putExtra("code", code)
-    context.startActivity(intent)
-}
-
-// неявный интент: только действие и ссылка, нужную активность система найдёт по intent-filter
-private fun openRoomByLink(context: Context, code: String) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("burmalda://room/$code"))
-    context.startActivity(intent)
-}
+private const val MAX_CODE_LENGTH = 10
 
 @Composable
-private fun JoinRoomCard(
-    narrow: Boolean,
-    onExplicit: (String) -> Unit,
-    onImplicit: (String) -> Unit,
-) {
+private fun JoinRoomCard(onJoin: (String) -> Unit) {
     var code by rememberSaveable { mutableStateOf("") }
     var error by rememberSaveable { mutableStateOf(false) }
 
-    fun open(action: (String) -> Unit) {
-        if (code.isBlank()) error = true else action(code)
+    fun join() {
+        if (code.isBlank()) error = true else onJoin(code)
     }
 
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -141,7 +112,7 @@ private fun JoinRoomCard(
             OutlinedTextField(
                 value = code,
                 onValueChange = {
-                    code = it.filter(Char::isLetterOrDigit).uppercase().take(6)
+                    code = it.filter(Char::isLetterOrDigit).uppercase().take(MAX_CODE_LENGTH)
                     error = false
                 },
                 label = { Text(stringResource(R.string.join_code_label)) },
@@ -154,22 +125,8 @@ private fun JoinRoomCard(
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            if (narrow) {
-                Button(onClick = { open(onExplicit) }, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.join_explicit))
-                }
-                OutlinedButton(onClick = { open(onImplicit) }, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.join_implicit))
-                }
-            } else {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { open(onExplicit) }, modifier = Modifier.weight(1f)) {
-                        Text(stringResource(R.string.join_explicit))
-                    }
-                    OutlinedButton(onClick = { open(onImplicit) }, modifier = Modifier.weight(1f)) {
-                        Text(stringResource(R.string.join_implicit))
-                    }
-                }
+            Button(onClick = { join() }, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.join_button))
             }
         }
     }
@@ -199,5 +156,5 @@ private fun TableRow(table: PokerTable, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun LobbyPreview() {
-    Burmalda67Theme(dynamicColor = false) { LobbyScreen() }
+    Burmalda67Theme(dynamicColor = false) { LobbyScreen(onOpenRoom = {}) }
 }

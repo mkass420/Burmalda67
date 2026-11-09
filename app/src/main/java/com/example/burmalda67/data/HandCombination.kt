@@ -1,6 +1,6 @@
 package com.example.burmalda67.data
 
-// Покерная комбинация для списка в RecyclerView
+// Покерная комбинация для списка на вкладке «Комбинации»
 data class HandCombination(
     val rank: Int,
     val name: String,
